@@ -108,7 +108,7 @@ int main(void) {
 			case 3: HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);  break;
 		}
 		
-		iprintf("Hello world: %d\n", cnt);
+		iprintf("Hello world: %d\r\n", cnt);
 		
 		HAL_Delay(100); // 100ms
 	}
