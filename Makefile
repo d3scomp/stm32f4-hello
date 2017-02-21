@@ -18,7 +18,8 @@ OPENOCD=openocd
 
 # Compiler and linker options
 CFLAGS = -mcpu=cortex-m4 -g -Os -Wall -pipe
-CFLAGS += -mlittle-endian -mthumb -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP -fsingle-precision-constant
+CFLAGS += -mlittle-endian -mthumb -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant
+CFLAGS += -MMD -MP
 CFLAGS += -D STM32F407xx
 CXXFLAGS = $(CFLAGS)
 LDFLAGS=-T STM32F407VG_FLASH.ld -specs=nosys.specs
@@ -110,6 +111,9 @@ $(HAL)/Src/stm32f4xx_hal_flash_ramfunc.o \
 $(HAL)/Src/stm32f4xx_hal_fmpi2c.o \
 $(HAL)/Src/stm32f4xx_hal_fmpi2c_ex.o
 
+OBJECTS=$(APP_OBJECTS) $(HAL_OBJECTS)
+
+DEPENDENCIES=$(OBJECTS:.o=.d)
 
 all: $(ELF)
 
@@ -138,5 +142,7 @@ flash: $(ELF)
 # Debug
 debug: $(ELF)
 	$(GDB) $(ELF) -ex "target remote | openocd -f board/stm32f4discovery.cfg --pipe" -ex load
+
+-include $(DEPENDENCIES)
 
 .PHONY: all flash clean debug
